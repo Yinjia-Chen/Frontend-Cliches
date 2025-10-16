@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body>
+
+<script type="text/javascript">
+
+
+let data = {
+	a:1,
+	b:2
+}
+
+let vue = new Proxy(data,{
+	get( target, propKey, receiver ){
+		console.log( '获取了' );
+		return Reflect.get(target, propKey, receiver);
+	},
+	set( target, propKey, value, receiver ){
+		console.log( '设置了' );
+		return Reflect.set(target, propKey, value, receiver);
+	}
+})
+
+vue.c = 3;
+console.log( vue.c )
+
+
+// for( let k in data ){
+// 	Object.defineProperty(vue,k,{
+		// get(){
+		// 	console.log( '获取了' );
+		// 	return data[k];
+		// },
+		// set( value ){
+		// 	console.log( '设置了' );
+		// 	data[k] = value;
+		// }
+// 	})
+// }
+
+// //设置了
+// vue.c = 3;
+// //获取了
+// console.log( vue );
+
+
+
+</script>
+
+</body>
+</html>

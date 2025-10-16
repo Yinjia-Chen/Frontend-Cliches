@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bind Example</title>
+</head>
+<body>
+  <button id="btn">Click Me</button>
+  <h1 id="h1s">Hello World</h1>
+
+  <script>
+    // 使用call，在页面渲染完就会自动执行function，且无法响应点击事件重复调用
+    // 使用bind，只有在每次点击事件发生时才调用bind，执行function
+    var btn = document.getElementById('btn');
+    var h1s = document.getElementById('h1s');
+    btn.onclick = function() {
+      console.log(this.id); // 输出绑定的 h1s 的 id
+    }.bind(h1s);
+  </script>
+</body>
+</html>

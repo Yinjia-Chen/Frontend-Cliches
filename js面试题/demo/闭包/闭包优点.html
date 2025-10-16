@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <ul>
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+  </ul>
+</body>
+
+<script>
+  // 此时不论点击任何一个li，都弹出4，因此for循环属于同步逻辑，而onclick事件属于异步逻辑中的宏任务，因此当调用onclick事件的时候，i已经循环为4
+  // var lis = document.getElementsByTagName('li');
+  // for (var i = 0; i < lis.length; i++) {
+  //   lis[i].onclick = () => {
+  //     alert(i);
+  //   }
+  // }
+
+  // 闭包，每次循环形成一个新的闭包环境，将当前的i值作为属性闭包进当前环境的li的onclick事件，解决变量共享异常问题
+  var lis = document.getElementsByTagName('li');
+  for(var i = 0; i<=lis.length; i++){
+    (function (i){
+      lis[i].onclick = ()=>{
+        alert(i+1);
+      }
+    })(i);
+  }
+</script>
+
+</html>

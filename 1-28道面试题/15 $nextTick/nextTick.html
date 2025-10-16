@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body>
+
+
+<div id='app'>123</div>
+
+
+<script type="text/javascript">
+
+class Vue{
+	constructor( options){
+		
+		options.created.bind(this)();
+
+		this.$el=document.querySelector(options.el);
+
+		options.mounted.bind(this)();
+	}
+	$nextTick( callback ){
+		return Promise.resolve().then(()=>{
+			callback();
+		})
+	}
+}
+
+new Vue({
+	el:'#app',
+	created(){
+		this.$nextTick(()=>{
+			console.log( this.$el );
+		})
+	},
+	mounted(){
+		//console.log( this.$el );
+	}
+})
+
+</script>
+
+
+</body>
+</html>
