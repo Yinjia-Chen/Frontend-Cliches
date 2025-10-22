@@ -22,7 +22,19 @@ Array.prototype.myMap = function (callBack, thisValue) {
 const arr = [1, 2, 3];
 
 // e.g.1: 常规使用
-const res1 = arr.myMap((x) => x * 2);
+// const res1 = arr.myMap((x) => x * 2);
+
+/* const res1 = arr.myMap((x) => {
+  console.log(this) // {}
+  return x * 2
+}); */
+
+const res1 = arr.myMap(
+  function (x) {
+    console.log(this) // 全局对象，浏览器中 window，node中 global
+    return x * 2
+  }
+);
 console.log(res1); // [2, 4, 6]
 
 // e.g.2: 改变 this 指向 - 迭代 arr，使用时调用 callBack 函数，函数中用到 multipler 对象的 factor 因子属性值，因此调用this，此时需要传入该对象，修改 this 指向，从而找到 this.factor
