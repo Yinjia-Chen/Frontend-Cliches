@@ -11,7 +11,9 @@
 5. 整条链：`arr => arr.__proto__ => Object.prototype => null`
 6. `Array instanceof Object === true`
 
-## 2. Array.prototype.map()
+
+
+## 2. Array.prototype.map
 
 ### 2.1 `arr.map(callBack, thisValue)`
 
@@ -39,6 +41,7 @@
    1.1 用来遍历迭代 `arr`
 
    1.2 作为 `call` 的参数
+   
 2. `call` 的参数？
 
    2.1 `thisValue`：`this` 的目标值
@@ -50,9 +53,11 @@
    2.4 `arr`：参数3，数组本身
 
    Q：为什么要这么多参数？  A：原生就这么多，有特殊情况需要传入 `i` 和 `arr`
+   
 3. 为什么要修改 `this` 指向？
 
    存在**回调函数内部**用到**其他对象属性值**的情况，此时需要将 `thisValue` 指向目标对象，可在回调函数内部调用 `this`
+   
 4. 关于本题中的 `this` 指向问题：
 
    4.1 不传 thisValue：thisValue 是undefined
@@ -63,6 +68,8 @@
    4.2 传 thisValue：
 
    - 此时需要改变 this 指向，建议只用匿名回调
+
+
 
 ## 3. Array.prototype.reduce
 
@@ -123,3 +130,35 @@
    4.1 对象：查找 对象B 中是否有 属性A（会自动沿着原型链查找）
 
    4.2 数组：检查 数组B 中的 索引A 是否为空槽（undefined）
+
+
+
+## 4. 数组扁平化
+
+### 4.1 概念
+
+将多维数组转化成**一维数组**
+
+```javascript
+[1, 2, [3, 4]] => [1, 2, 3, 4]
+```
+
+### 4.2 实现方式：
+
+#### 4.2.1 `Array.prototype.flat(depth)`  - ES6 新增的 API
+
+从外至内按照层次拆开（相当于从第二个 `[` 开始由左向右逐层展开）
+
+关于参数 `depth` ：要展开的数组层次，默认为1
+
+要实现**数组扁平化**（一维数组）：`let depth  = Infinity`
+
+#### 4.2.2 
+
+concat？
+
+为什么会用到递归？
+
+Depth = 0，为什么是浅拷贝不是深拷贝？
+
+arr.slice() return省却问题？
