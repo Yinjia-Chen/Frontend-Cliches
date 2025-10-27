@@ -55,4 +55,4 @@ Array.prototype.myFlat = function(depth = 1){
 }
 console.log('arr.myFlat():',multi_arr.myFlat()); // [ 1, 2, 3, [ 4, [ 5, 6 ] ] ]
 console.log('arr.myFlat(2):',multi_arr.myFlat(2)); // [ 1, 2, 3, 4, [ 5, 6 ] ]
-console.log('arr.myFlat(Infinity):', multi_arr.myFlat(Infinity)); // [ 1, 2, 3, 4, [ 5, 6 ] ]
+console.log('arr.myFlat(Infinity):', multi_arr.myFlat(Infinity)); // [ 1, 2, 3, 4, 5, 6 ]
