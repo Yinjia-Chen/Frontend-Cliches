@@ -219,6 +219,34 @@
 
 ### 5.2 实际运用：
 
+1.  柯里化 二次封装 axios
+
+```javascript
+import axios from 'axios';
+
+// 柯里化请求函数：先固定 baseURL 和 headers，再传路径、方法、数据
+const createRequest = (baseURL) => (headers) => (url, method, data = {}) => {
+    return axios({
+        baseURL,
+        headers,
+        url,
+        method,
+        [method.toLowerCase() === 'get' ? 'params' : 'data']: data
+    });
+};
+
+// 1. 固定通用参数：baseURL 和 Authorization 头
+const request = createRequest('https://api.example.com')({
+    Authorization: 'Bearer' + localStorage.getItem('token')
+});
+
+// 2. 后续调用只需传变化的参数（路径、方法、数据）
+// GET请求：获取用户数据
+request('/user/info', 'GET').then(res => console.log(res));
+// POST请求：提交表单
+request('/form/submit', 'POST', { name:'张三' }).then(res => console.log(res));
+```
+
 
 
 ### 5.3 实现通用函数 `curry` ：
