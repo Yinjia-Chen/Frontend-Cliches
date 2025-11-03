@@ -247,14 +247,82 @@ request('/user/info', 'GET').then(res => console.log(res));
 request('/form/submit', 'POST', { name:'张三' }).then(res => console.log(res));
 ```
 
-
-
 ### 5.3 实现通用函数 `curry` ：
 
+1. 出入参：
 
+   入参：待柯里化的函数 `fn` ；`fn` 的参数个数 `len` ；当前已经接收的参数 `collected` 
 
+   返回：柯里化后的 `fn` 
+
+2. 实现思路：链式调用（递归） + 闭包保存参数 + 参数合并 + 透传 `this` + 调用执行
+
+   2.1 返回一个匿名函数
+
+   2.2 用 `...params` 接收未被接收的参数，并作为匿名函数的参数
+
+   2.3 合并 `...collected` 和 `...params` 为 `args` 
+
+   2.4 校验 `args` 当前长度是否达到原函数 `fn` 的参数数 `len` 
+
+   ​       2.4.1 `args.length >= len` 透传 this 并用 `apply` 调用 fn，执行函数
+   
+   ​       2.4.2 `else` 透传 `this` 并用 `call` 递归调用 `curry` 继续接收参数
 ### 5.4 Q&A&Notice：
 
- ...params?为什么参数不会被垃圾回收机制处理?如何关联参数和...params？
+1. `...params` 是什么？为什么参数不会被垃圾回收机制处理？如何关联参数和 `...params` ？用 `params` 会怎么样？为什么？
 
- this 指向为什么要一直锁定？是什么？
+   `...params` 是**剩余参数语法**，在调用时**把当前传入的实参收集成一个真数组**
+
+   js的**闭包**机制会保留作用域内部变量的引用，此处匿名函数中使用 `len` 等参数便是闭包，因此自然也不会丢失原 `fn` 中的参数
+
+   rest参数语法：`...params` **收集**参数        spread参数语法：`[...params, ...collected]`
+
+   `params` **只能接收一个参数**，需要用搭配 "..." 来进行**参数收集**
+
+2. 用 `concat` 拼接 `params` 和 `collected` 可以吗？
+
+   可以，因为这里的 "..." 是 spread 展开运算符展开两个普通数组，然后拼接起来再重新包裹，写法如下：
+
+   ```javascript
+   const args = [...collected, ...params];
+   // arr1.concat(arr2)
+   const args = collected.concat(params);
+   ```
+
+3. `this` 指向什么？为什么要一直透传锁定 `this` 指向？
+
+   `this` 在 `curry` 中代表**指向上下文**，在用不到对象等需要 `this` 的情况下**（普通函数），指向 全局对象**
+
+   对于对象中函数，取出来传入 `curry` 时 `this` **默认指向 `undefined`**，因此需要**先 `fn.bind(obj)`** ，然后在 `curry` 中锁定并透传 `this` 指向，否则后续的函数调用链上 `this` 会退化成 `undefined`
+
+   函数一定要**在柯里化前 `bind(obj)`** ，**柯里化后绑定**：只有调用链上的**第一个**函数的 `this` 指向 `obj`，**后续不绑定**
+
+4. `collected`？`...collected`？
+
+   类似 `params`，第一次进 `curry` 逻辑时是一个**空数组**
+
+5. 再多传一个参数会怎么样？合并在最后一个参数中传入？少传参数？
+
+   多传的参数：
+
+   - 合并在最后一个 `()` 中多传的参数，**直接被忽略无视**
+   - 在尾部再多添 `(param)` ，**提示报错**：前序柯里化函数收集满参数会执行逻辑，返回一个值，由此会得到 **`返回值(6)`** 的计算式，**报错 not a function**
+
+   少传参数：没有预期返回值，函数不会部分执行（**不返回中间值**），**返回**一个待传入参数（待接收剩余参数）的**函数**
+
+6. `call` & `apply` & `bind`
+
+   call、apply、bind，第一个参数都是当前函数的this要绑定的指向，剩余参数可以不传
+
+   call、bind，剩余参数传元素          apply，参数传数组
+
+   call、apply，立即执行                    bind，绑定后手动调用
+
+7. 直观理解一下：
+
+   让AI写例子：帮我解析一下，在我调用curry柯里化fn的时候，和后来第一次调用_fn的时候，...params和...collected的变化过程
+
+
+
+## 6. 深浅拷贝
