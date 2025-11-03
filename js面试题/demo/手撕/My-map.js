@@ -46,3 +46,5 @@ const res2 = arr.myMap(
   multiplier
 )
 console.log(res2);
+
+// TODO: arr.map 用 reduce 实现
